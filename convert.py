@@ -1,24 +1,42 @@
+import tkinter
 import re
 
+root = tkinter.Tk()
+output = tkinter.Text(root)
 
-filename = "ydke.txt"
-with open(filename) as file:
-    lines = [line.rstrip() for line in file]
 
-if "Main Deck:" in lines:
-    lines.remove("Main Deck:")
-if "Extra Deck:" in lines:
-    lines.remove("Extra Deck:")
-if "Side Deck:" in lines:
-    lines.remove("Side Deck:")
+def clean(lines):
+    lines = lines.splitlines()
+    if "Main Deck:" in lines:
+        lines.remove("Main Deck:")
+    if "Extra Deck:" in lines:
+        lines.remove("Extra Deck:")
+    if "Side Deck:" in lines:
+        lines.remove("Side Deck:")
 
-lines = list(filter(None, lines))
+    lines = filter(None, lines)
 
-linesC = list()
+    listcard = list()
 
-for line in lines:
-    linesC.append(line[-1] + " " + line[:-3])
+    for line in lines:
+        listcard.append(line[-1] + " " + line[:-3])
 
-with open("output.txt", "w") as txt_file:
-    for line in linesC:
-        txt_file.write("".join(line) + "\n")
+    listcard = "\n".join(listcard)
+
+    output.config(state=tkinter.NORMAL)
+    output.delete("1.0", tkinter.END)
+    output.insert(tkinter.END, listcard)
+    output.config(state=tkinter.DISABLED)
+
+
+input = tkinter.Text(root)
+input.pack()
+
+
+openBtn = tkinter.Button(
+    root, text='Open', command=lambda: clean(input.get("1.0", tkinter.END)))
+openBtn.pack(expand=tkinter.FALSE, fill=tkinter.X, side=tkinter.TOP)
+
+output.pack()
+
+root.mainloop()
